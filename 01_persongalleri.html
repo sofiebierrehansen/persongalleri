@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="da">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Persongalleri</title>
+    <style>
+      img {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      main {
+        margin: 1rem;
+      }
+
+      article {
+        border: 1px solid rgb(233, 138, 14);
+        padding: 0.5rem;
+      }
+
+      section {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        gap: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Persongalleri</h1>
+      <section class="container">
+        <template>
+          <article class="personer">
+            <img class="profilbillede" src="" alt="" />
+            <h2 class="fornavn"></h2>
+            <p class="efternavn"></p>
+            <p class="email"></p>
+          </article>
+        </template>
+      </section>
+    </main>
+    <script>
+      const url = "https://tema7-c008.restdb.io/rest/medlemmer";
+      const options = {
+        headers: {
+          "x-apikey": "61fcf7e83f215f310a37be67",
+        },
+      };
+
+      async function hentData() {
+        const resspons = await fetch(url, options);
+        const json = await resspons.json();
+        vis(json);
+      }
+
+      const container = document.querySelector("section");
+      const temp = document.querySelector("template");
+
+      function vis(json) {
+        console.log(json);
+
+        json.forEach((medlem) => {
+          const klon = temp.cloneNode(true).content;
+          klon.querySelector(".profilbillede").src =
+            "billeder/" + medlem.profilbillede;
+          klon.querySelector(".fornavn").textContent = medlem.fornavn;
+          klon.querySelector(".efternavn").textContent =
+            "Efternavn: " + medlem.efternavn;
+          klon.querySelector(".email").textContent = "Email: " + medlem.email;
+          container.appendChild(klon);
+        });
+      }
+
+      hentData();
+    </script>
+  </body>
+</html>
